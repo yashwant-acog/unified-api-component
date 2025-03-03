@@ -11,10 +11,12 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
     const data = dataManager.fetchData(component);
 
-    (async () => {
-      console.log(await dataManager.fetchFromDB(component));
-      console.log(await dataManager.fetchDataLimit(component, 1));
-    })();
+    // (async () => {
+    //   console.log("From DB: ",await dataManager.fetchFromDB(component));
+    //   console.log("From DB with LIMIT: ",await dataManager.fetchDataLimit(component, 1));
+    //   console.log("From LOCAL: ",await dataManager.fetchData(component));
+    //   console.log("From SOURCE: ",await dataManager.fetchFromSource('api','http://localhost:3000/api/fetch/data?component=students'));
+    // })();
 
 
 

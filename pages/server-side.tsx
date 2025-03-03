@@ -4,30 +4,20 @@ import { Users, GraduationCap, User, ArrowBigLeftDash } from "lucide-react"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 
-const ParentsHOC = withServerFetching(Parents, "parents")
 const StudentsHOC = withServerFetching(Parents, "students")
-const TeachersHOC = withServerFetching(Parents, "teachers")
 
 export const getServerSideProps = async () => {
-  const [parentsProps, studentsProps, teachersProps] = await Promise.all([
-    ParentsHOC.getServerSideProps(),
-    StudentsHOC.getServerSideProps(),
-    TeachersHOC.getServerSideProps(),
-  ])
+  const studentsProps = await StudentsHOC.getServerSideProps()
 
   return {
     props: {
-      parentsData: parentsProps.props.data,
-      studentsData: studentsProps.props.data,
-      teachersData: teachersProps.props.data,
+      studentsData: studentsProps.props.data
     },
   }
 }
 
 export default function Home({ parentsData, studentsData, teachersData }: any) {
-  const { Component: ParentsComponent } = ParentsHOC
   const { Component: StudentsComponent } = StudentsHOC
-  const { Component: TeachersComponent } = TeachersHOC
 
   const [activeTab, setActiveTab] = useState<"students" | "teachers" | "parents">("students")
 
@@ -68,8 +58,6 @@ export default function Home({ parentsData, studentsData, teachersData }: any) {
       </div>
 
       {activeTab === "students" && <StudentsComponent data={studentsData} />}
-      {activeTab === "teachers" && <TeachersComponent data={teachersData} />}
-      {activeTab === "parents" && <ParentsComponent data={parentsData} />}
       
     </div>
   )

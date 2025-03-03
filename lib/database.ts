@@ -5,6 +5,6 @@ import parents from "../data/parents.json"
 export const datasets: Record<string, any> = {
   students,
   teachers,
-  parents
+  parents,
 };
 

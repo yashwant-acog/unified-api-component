@@ -1,33 +1,36 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
+import { useEffect, useState } from "react";
 
-export const withClientFetching = (Component: React.ComponentType<{ data: any[] }>, componentName: string) => {
+// Accepts a function that returns a Promise
+export const withClientFetching = (
+  Component: React.ComponentType<{ data: any[] }>,
+  fetchFunction: () => Promise<any>
+) => {
   return function WrappedComponent() {
-    const [data, setData] = useState<any[]>([])
-    const [loading, setLoading] = useState(true)
+    const [data, setData] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
       const fetchData = async () => {
         try {
-          const response = await fetch(`/api/fetch/data?component=${componentName}`)
-          const result = await response.json()
-          setData(result)
+          const result = await fetchFunction(); // Call the function here
+          setData(result);
         } catch (error) {
-          console.error("Error fetching data:", error)
+          console.error("Error fetching data:", error);
         } finally {
-          setLoading(false)
+          setLoading(false);
         }
-      }
-      fetchData()
-    }, [])
+      };
+      fetchData();
+    }, []);
 
     if (loading) {
-      return <p>Loading...</p>
+      return <p>Loading...</p>;
     }
 
-    return <Component data={data} />
-  }
-}
+    return <Component data={data} />;
+  };
+};
 
-export default withClientFetching
+export default withClientFetching;

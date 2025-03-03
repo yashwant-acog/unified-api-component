@@ -7,20 +7,27 @@ import {
   User,
   LucideView,
   ArrowBigRightDash,
+  DrumIcon
 } from "lucide-react";
 import { withClientFetching } from "../components/hoc/withClientFetching";
 import Students from "../components/students";
 import Teachers from "../components/teachers";
 import Parents from "../components/parents";
 import { useRouter } from "next/router";
+import { Data } from "@/lib/data";
+import Dummy from "@/components/dummmy";
 
-const StudentData = withClientFetching(Students, "students");
-const TeacherData = withClientFetching(Teachers, "teachers");
-const ParentData = withClientFetching(Parents, "parents");
+const dataManager = new Data();
+
+const StudentData = withClientFetching(Students, () => dataManager.fetchFromSource("json","students"));
+const ParentData = withClientFetching(Parents, () => dataManager.fetchData("parents"));
+const TeacherData = withClientFetching(Teachers, () => dataManager.fetchData("teachers"));
+const DummyData = withClientFetching(Dummy, () => dataManager.fetchFromSource("api","https://jsonplaceholder.typicode.com/todos/1"));
+
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<
-    "students" | "teachers" | "parents"
+    "students" | "teachers" | "parents" | "dummy"
   >("students");
   const router = useRouter()
 
@@ -56,6 +63,11 @@ export default function Home() {
             label: "Parents",
             icon: <User className="mr-2 h-5 w-5" />,
           },
+          {
+            key: "dummy",
+            label: "Dummy",
+            icon: <DrumIcon className="mr-2 h-5 w-5" />,
+          }
         ].map(({ key, label, icon }) => (
           <button
             key={key}
@@ -77,6 +89,7 @@ export default function Home() {
       {activeTab === "students" && <StudentData />}
       {activeTab === "teachers" && <TeacherData />}
       {activeTab === "parents" && <ParentData />}
+      {activeTab === "dummy" && <DummyData />}
     </div>
   );
 }

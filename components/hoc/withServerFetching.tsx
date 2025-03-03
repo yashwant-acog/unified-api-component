@@ -1,5 +1,3 @@
-import { GetServerSideProps } from "next"
-
 const withServerFetching = (
   Component: React.ComponentType<{ data: any[] }>,
   componentName: string
@@ -8,8 +6,12 @@ const withServerFetching = (
     return <Component data={data} />
   }
 
+  const HOCComponent = (props: { data?: any[] }) => {
+    return <WrappedComponent data={props.data ?? []} />
+  }
+
   return {
-    Component: WrappedComponent,
+    Component: HOCComponent,
     getServerSideProps: async () => {
       try {
         const response = await fetch(`http://localhost:3000/api/fetch/data?component=${componentName}`)
@@ -17,7 +19,7 @@ const withServerFetching = (
         return { props: { data } }
       } catch (error) {
         console.error("Error fetching data:", error)
-        return { props: { data: [] } }
+        return { props: { data: [] } } // Ensure data is always an array
       }
     },
   }
