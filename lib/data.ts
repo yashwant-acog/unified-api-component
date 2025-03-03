@@ -1,11 +1,12 @@
-// import sqlite3 from "sqlite3";
-// import { open } from "sqlite";
+import sqlite3 from "sqlite3";
+import { open } from "sqlite";
+import { Component, Expand } from "lucide-react";
 import { datasets } from "./database";
 import { Base } from "./fetcher";
 
 // Open SQLite database connection
 // const dbPromise = open({
-//   filename: "./database.sqlite", // Path to your database file
+//   filename: "http://localhost:3000/database.sqlite", // Path to your database file
 //   driver: sqlite3.Database,
 // });
 
@@ -37,7 +38,7 @@ export class Data extends Base {
   //   }
   // }
 
-  async fetchFromSource(source: string, component: string, limit?: number) {
+  async fetchFromSource(source: string, component: string) {
     switch (source) {
       case "json":
         return this.fetchData(component);
@@ -62,5 +63,11 @@ export class Data extends Base {
       console.error(`Error fetching from API: ${error.message}`);
       return { error: "Failed to fetch from API" };
     }
+  }
+}
+
+export class newClass extends Data{
+  async fetchNew(component: string) {
+    return {userId: 'yashwant', title: 'yashwant-rao'}
   }
 }

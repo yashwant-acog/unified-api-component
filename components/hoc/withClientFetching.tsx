@@ -5,7 +5,8 @@ import { useEffect, useState } from "react";
 // Accepts a function that returns a Promise
 export const withClientFetching = (
   Component: React.ComponentType<{ data: any[] }>,
-  fetchFunction: () => Promise<any>
+  fetchFunction: () => Promise<any>,
+  url?: string
 ) => {
   return function WrappedComponent() {
     const [data, setData] = useState<any[]>([]);
@@ -14,8 +15,8 @@ export const withClientFetching = (
     useEffect(() => {
       const fetchData = async () => {
         try {
-          const result = await fetchFunction(); // Call the function here
-          setData(result);
+          const result = url? await fetch(`${url}`) : await fetchFunction(); // Call the function here
+          url? setData(await result.json()) : setData(result);
         } catch (error) {
           console.error("Error fetching data:", error);
         } finally {

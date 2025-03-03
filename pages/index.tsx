@@ -14,15 +14,20 @@ import Students from "../components/students";
 import Teachers from "../components/teachers";
 import Parents from "../components/parents";
 import { useRouter } from "next/router";
-import { Data } from "@/lib/data";
+import { Data, newClass } from "@/lib/data";
 import Dummy from "@/components/dummmy";
 
-const dataManager = new Data();
 
-const StudentData = withClientFetching(Students, () => dataManager.fetchFromSource("json","students"));
+const dataManager = new newClass()
+
+// const StudentData = withClientFetching(Students, () => dataManager.fetchFromSource("json","students"));
+const StudentData = withClientFetching(Students, () => dataManager.fetchFromSource("api","http://localhost:3000/api/fetch/data?component=students"));
 const ParentData = withClientFetching(Parents, () => dataManager.fetchData("parents"));
-const TeacherData = withClientFetching(Teachers, () => dataManager.fetchData("teachers"));
+
+const TeacherData = withClientFetching(Teachers,async()=>{},"http://localhost:3000/api/fetch/data?component=teachers");
+
 const DummyData = withClientFetching(Dummy, () => dataManager.fetchFromSource("api","https://jsonplaceholder.typicode.com/todos/1"));
+const DummyData2 = withClientFetching(Dummy, () => dataManager.fetchNew('OWN API'));
 
 
 export default function Home() {
@@ -89,7 +94,7 @@ export default function Home() {
       {activeTab === "students" && <StudentData />}
       {activeTab === "teachers" && <TeacherData />}
       {activeTab === "parents" && <ParentData />}
-      {activeTab === "dummy" && <DummyData />}
+      {activeTab === "dummy" && <DummyData2 />}
     </div>
   );
 }
